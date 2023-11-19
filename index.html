@@ -2,9 +2,73 @@
 <html lang="en">
   <head>
     <script type="module">
-      import { add } from "./build/release.js";
-      document.body.innerText = add(1, 2);
+      import {
+        generateCheckerBoard,
+        memory,
+        CHECKERBOARD_BUFFER_POINTER,
+        CHECKERBOARD_BUFFER_SIZE,
+      } from "./build/release.js";
+
+      const wasmByteMemoryArray = new Uint8Array(memory.buffer);
+      const canvasElement = document.querySelector("#canvas");
+
+      const canvasContext = canvasElement.getContext("2d");
+      const canvasImageData = canvasContext.createImageData(canvasElement.width, canvasElement.height);
+
+      // Clear the canvas
+      canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+      function getDarkValue() {
+        return Math.floor(Math.random() * 100);
+      }
+
+      function getLightValue() {
+        return Math.floor(Math.random() * 127) + 127;
+      }
+
+      function drawCheckerBoard() {
+        const checkerBoardSize = 20;
+
+        // Generate a new checkerboard in wasm.
+        generateCheckerBoard(
+          getDarkValue(),
+          getDarkValue(),
+          getDarkValue(),
+          getLightValue(),
+          getLightValue(),
+          getLightValue(),
+        );
+
+        // Pull out the RGBA values from wasm memory.
+        const imageDataArray = wasmByteMemoryArray.slice(
+          CHECKERBOARD_BUFFER_POINTER.valueOf(),
+          CHECKERBOARD_BUFFER_SIZE.valueOf(),
+        )
+
+        // Set the values on the canvas as image data.
+        canvasImageData.data.set(imageDataArray);
+
+        // Clear the canvas
+        canvasContext.clearRect(0, 0, canvasElement.width, canvasElement.height);
+
+        // Place the new generated checkerboard onto the canvas
+        canvasContext.putImageData(canvasImageData, 0, 0);
+      }
+
+      drawCheckerBoard();
+
+      setInterval(() => {
+        drawCheckerBoard();
+      }, 1000);
     </script>
   </head>
-  <body></body>
+  <body>
+    <canvas
+      id="canvas"
+      width="20"
+      height="20"
+      style="image-rendering: pixelated; image-rendering: crisp-edges; width: 100%;"
+    >
+    </canvas>
+  </body>
 </html>
