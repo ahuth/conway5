@@ -63,14 +63,25 @@
         // Clear the canvas
         context.clearRect(0, 0, canvas.width, canvas.height);
 
-        // Draw the cells.
-        for (let x = 0; x < size; x++) {
-          for (let y = 0; y < size; y++) {
-            if (getCell(x, y)) {
-              context.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
-            }
+        // for (let x = 0; x < size; x++) {
+        //   for (let y = 0; y < size; y++) {
+        //     if (getCell(x, y)) {
+        //       context.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
+        //     }
+        //   }
+        // }
+
+        // Interpret the linear memory directly, instead of calling into wasm for each cell.
+        const mem = wasmByteMemoryArray.slice(0, size * size);
+
+        mem.forEach((byte, index) => {
+          const x = index % size;
+          const y = Math.floor(index / size);
+
+          if (byte & 1) {
+            context.fillRect(x * cellWidth, y * cellHeight, cellWidth, cellHeight);
           }
-        }
+        });
       }
 
       function compute() {

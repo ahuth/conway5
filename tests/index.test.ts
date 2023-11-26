@@ -10,8 +10,8 @@ import {
 
 test("offsetFromCoordinate", () => {
   expect(offsetFromCoordinate(0, 0)).toEqual(0);
-  expect(offsetFromCoordinate(49, 0)).toEqual(196);
-  expect(offsetFromCoordinate(10, 2)).toEqual(2040);
+  expect(offsetFromCoordinate(49, 0)).toEqual(49);
+  expect(offsetFromCoordinate(10, 2)).toEqual(510);
 })
 
 test("get / set", () => {
@@ -21,7 +21,7 @@ test("get / set", () => {
 });
 
 test("read memory directly", () => {
-  const mem = new Uint32Array(memory.buffer);
+  const mem = new Uint8Array(memory.buffer);
   setCell(2, 2, 10);
   expect(mem[2 + 2 * 250]).toEqual(10);
   expect(mem[3 + 2 * 250]).toEqual(0);

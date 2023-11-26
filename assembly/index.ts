@@ -1,5 +1,5 @@
 // Grow the memory by enough to hold our universe. Each page is 64kb.
-memory.grow(4);
+memory.grow(1);
 
 export const UNIVERSE_SIZE: i32 = 250;
 
@@ -7,15 +7,15 @@ export const UNIVERSE_SIZE: i32 = 250;
  * Convert from 2D coordinate to a 1D offset in our linear memory.
  */
 export function offsetFromCoordinate(x: i32, y: i32): i32 {
-  return (x + y * UNIVERSE_SIZE) * 4;
+  return x + y * UNIVERSE_SIZE;
 }
 
-export function getCell(x: i32, y: i32): i32 {
-  return load<i32>(offsetFromCoordinate(wrap(x), wrap(y)));
+export function getCell(x: i32, y: i32): u8 {
+  return load<u8>(offsetFromCoordinate(wrap(x), wrap(y)));
 }
 
-export function setCell(x: i32, y: i32, value: i32): void {
-  store<i32>(offsetFromCoordinate(wrap(x), wrap(y)), value);
+export function setCell(x: i32, y: i32, value: u8): void {
+  store<u8>(offsetFromCoordinate(wrap(x), wrap(y)), value);
 }
 
 export function wrap(value: i32): i32 {
@@ -24,7 +24,7 @@ export function wrap(value: i32): i32 {
   return value;
 }
 
-export function next(current: i32, neighbors: i32): i32 {
+export function next(current: u8, neighbors: u8): u8 {
   if (neighbors === 3) { return 1; }
   if (neighbors === 2) { return current; }
   return 0;
@@ -40,7 +40,7 @@ export function evolveCells(): void {
   }
 }
 
-function countNeighbors(x: i32, y: i32): i32 {
+function countNeighbors(x: i32, y: i32): u8 {
   return getCell(x - 1, y - 1)
     + getCell(x - 1, y)
     + getCell(x - 1, y + 1)
