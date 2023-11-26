@@ -10,6 +10,7 @@
   <body>
     <div>
       <button id="toggle">Play</button>
+      <button id="step">Step</button>
     </div>
     <canvas
       id="canvas"
@@ -30,6 +31,7 @@
       const wasmByteMemoryArray = new Uint8Array(memory.buffer);
       const canvas = document.querySelector("#canvas");
       const toggle = document.querySelector("#toggle");
+      const step = document.querySelector("#step");
       const context = canvas.getContext("2d");
       const size = UNIVERSE_SIZE.value;
       const cellHeight = canvas.height / size;
@@ -49,6 +51,11 @@
           toggle.textContent = 'Stop';
           window.requestAnimationFrame(compute);
         }
+      });
+
+      step.addEventListener('click', () => {
+        evolveCells();
+        draw();
       });
 
       function randomize() {
