@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
   <head>
+    <meta charset="utf-8" />
+    <link rel="icon" href="data:,">
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="Conway's game of life in WebAssembly" />
+    <title>Conway5</title>
+  </head>
+  <body>
+    <canvas
+      width="750"
+      height="750"
+      style="image-rendering: crisp-edges; width: 100%"
+    >
+    </canvas>
     <script type="module">
       import {
         memory,
@@ -45,13 +58,5 @@
         draw();
       }, 100);
     </script>
-  </head>
-  <body>
-    <canvas
-      width="750"
-      height="750"
-      style="image-rendering: crisp-edges; width: 100%"
-    >
-    </canvas>
   </body>
 </html>
