@@ -38,6 +38,7 @@
       let playing = false;
 
       randomize();
+      draw();
 
       toggle.addEventListener('click', () => {
         if (playing) {
@@ -46,23 +47,19 @@
         } else {
           playing = true;
           toggle.textContent = 'Stop';
-          window.requestAnimationFrame(draw);
+          window.requestAnimationFrame(compute);
         }
       });
 
       function randomize() {
-        const rand = () => Math.floor(Math.random() * 50);
+        const rand = () => Math.floor(Math.random() * size);
 
-        for (let i = 0; i < 500; i++) {
+        for (let i = 0; i < 10000; i++) {
           setCell(rand(), rand(), 1);
         }
       }
 
       function draw() {
-        if (!playing) { return; }
-
-        evolveCells();
-
         // Clear the canvas
         context.clearRect(0, 0, canvas.width, canvas.height);
 
@@ -74,8 +71,13 @@
             }
           }
         }
+      }
 
-        window.requestAnimationFrame(draw);
+      function compute() {
+        if (!playing) { return; }
+        evolveCells();
+        draw();
+        window.requestAnimationFrame(compute);
       }
     </script>
   </body>
