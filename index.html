@@ -8,10 +8,14 @@
     <title>Conway5</title>
   </head>
   <body>
+    <div>
+      <button id="toggle">Play</button>
+    </div>
     <canvas
+      id="canvas"
       width="750"
       height="750"
-      style="image-rendering: crisp-edges; width: 100%"
+      style="image-rendering: crisp-edges;"
     >
     </canvas>
     <script type="module">
@@ -24,19 +28,39 @@
       } from "./build/release.js";
 
       const wasmByteMemoryArray = new Uint8Array(memory.buffer);
-      const canvas = document.querySelector("canvas");
+      const canvas = document.querySelector("#canvas");
+      const toggle = document.querySelector("#toggle");
       const context = canvas.getContext("2d");
       const size = UNIVERSE_SIZE.value;
       const cellHeight = canvas.height / size;
       const cellWidth = canvas.width / size;
 
-      // Randomize the cells to start.
-      const rand = () => Math.floor(Math.random() * 50);
-      for (let i = 0; i < 500; i++) {
-        setCell(rand(), rand(), 1);
+      let playing = false;
+
+      randomize();
+
+      toggle.addEventListener('click', () => {
+        if (playing) {
+          playing = false;
+          toggle.textContent = 'Start';
+        } else {
+          playing = true;
+          toggle.textContent = 'Stop';
+          window.requestAnimationFrame(draw);
+        }
+      });
+
+      function randomize() {
+        const rand = () => Math.floor(Math.random() * 50);
+
+        for (let i = 0; i < 500; i++) {
+          setCell(rand(), rand(), 1);
+        }
       }
 
       function draw() {
+        if (!playing) { return; }
+
         evolveCells();
 
         // Clear the canvas
@@ -50,13 +74,9 @@
             }
           }
         }
+
+        window.requestAnimationFrame(draw);
       }
-
-      draw();
-
-      setInterval(() => {
-        draw();
-      }, 100);
     </script>
   </body>
 </html>
