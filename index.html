@@ -61,7 +61,9 @@
       function randomize() {
         for (let x = 0; x < size; x++) {
           for (let y = 0; y < size; y++) {
-            setCell(x, y, Math.round(Math.random()));
+            if (Math.round(Math.random())) {
+              setCell(x, y, 1);
+            }
           }
         }
       }
