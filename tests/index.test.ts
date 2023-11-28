@@ -1,17 +1,17 @@
 import {test, expect} from "vitest";
 import {
   memory,
-  offsetFromCoordinate,
+  indexFromCoordinate,
   getCell,
   setCell,
   wrap,
   next,
 } from "../build/debug.js";
 
-test("offsetFromCoordinate", () => {
-  expect(offsetFromCoordinate(0, 0)).toEqual(0);
-  expect(offsetFromCoordinate(49, 0)).toEqual(49);
-  expect(offsetFromCoordinate(10, 2)).toEqual(510);
+test("indexFromCoordinate", () => {
+  expect(indexFromCoordinate(0, 0)).toEqual(0);
+  expect(indexFromCoordinate(49, 0)).toEqual(49);
+  expect(indexFromCoordinate(10, 2)).toEqual(510);
 })
 
 test("get / set", () => {

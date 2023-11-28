@@ -4,18 +4,18 @@ memory.grow(1);
 export const UNIVERSE_SIZE: i32 = 250;
 
 /**
- * Convert from 2D coordinate to a 1D offset in our linear memory.
+ * Convert from 2D coordinate to a 1D index in our linear memory.
  */
-export function offsetFromCoordinate(x: i32, y: i32): i32 {
+export function indexFromCoordinate(x: i32, y: i32): i32 {
   return x + y * UNIVERSE_SIZE;
 }
 
 export function getCell(x: i32, y: i32): u8 {
-  return load<u8>(offsetFromCoordinate(wrap(x), wrap(y)));
+  return load<u8>(indexFromCoordinate(wrap(x), wrap(y)));
 }
 
 export function setCell(x: i32, y: i32, value: u8): void {
-  store<u8>(offsetFromCoordinate(wrap(x), wrap(y)), value);
+  store<u8>(indexFromCoordinate(wrap(x), wrap(y)), value);
 }
 
 export function wrap(value: i32): i32 {
