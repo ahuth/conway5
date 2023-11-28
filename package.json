@@ -12,7 +12,7 @@
     "build:debug": "asc assembly/index.ts --target debug",
     "build:release": "asc assembly/index.ts --target release",
     "build": "npm run build:debug && npm run build:release",
-    "dist": "npm run build && mkdir -p dist && cp -r ./build ./dist && cp index.html dist",
+    "dist": "npm run build:release && mkdir -p dist && cp -r ./build ./dist && cp index.html dist",
     "start": "npx serve .",
     "test": "vitest"
   },
