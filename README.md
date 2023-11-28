@@ -8,4 +8,6 @@ Fifth implementation, after
 - https://github.com/ahuth/conway3
 - https://github.com/ahuth/conway4
 
+See a live demo at https://ahuth.github.io/conway5.
+
 ![Animated gif of the app running](./screenshots/conway5_3.gif)
