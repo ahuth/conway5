@@ -38,11 +38,14 @@ export function evolveCells(): void {
   for (let x: i32 = 0; x < UNIVERSE_SIZE; x++) {
     for (let y: i32 = 0; y < UNIVERSE_SIZE; y++) {
       const neighborCount = countNeighbors(x, y);
-      const current = getCell(x, y);
+      const currentState = getCell(x, y);
+      const nextState = next(currentState, neighborCount)
 
-      // Write the new cell value. Note that we actually write this to a copy of our universe, so
-      // we don't overwrite cell values and mess up neighbor counts.
-      setCell(x, y, next(current, neighborCount), MEMORY_SIZE);
+      if (currentState !== nextState) {
+        // Write the new cell value. Note that we actually write this to a copy of our universe, so
+        // we don't overwrite cell values and mess up neighbor counts.
+        setCell(x, y, nextState, MEMORY_SIZE);
+      }
     }
   }
 
