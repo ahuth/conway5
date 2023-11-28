@@ -1,7 +1,11 @@
-// Grow the memory by enough to hold our universe. Each page is 64kb.
-memory.grow(1);
+// Grow the memory by enough to hold 2 universes (one primary which we read from, and one secondary
+// that we'll write to without mutating the values).
+//
+// Each page is 64kb.
+memory.grow(2);
 
 export const UNIVERSE_SIZE: i32 = 250;
+const MEMORY_SIZE = UNIVERSE_SIZE * UNIVERSE_SIZE;
 
 /**
  * Convert from 2D coordinate to a 1D index in our linear memory.
@@ -14,8 +18,8 @@ export function getCell(x: i32, y: i32): u8 {
   return load<u8>(indexFromCoordinate(wrap(x), wrap(y)));
 }
 
-export function setCell(x: i32, y: i32, value: u8): void {
-  store<u8>(indexFromCoordinate(wrap(x), wrap(y)), value);
+export function setCell(x: i32, y: i32, value: u8, offset: i32): void {
+  store<u8>(indexFromCoordinate(wrap(x), wrap(y)) + offset, value);
 }
 
 export function wrap(value: i32): i32 {
@@ -35,9 +39,15 @@ export function evolveCells(): void {
     for (let y: i32 = 0; y < UNIVERSE_SIZE; y++) {
       const neighborCount = countNeighbors(x, y);
       const current = getCell(x, y);
-      setCell(x, y, next(current, neighborCount));
+
+      // Write the new cell value. Note that we actually write this to a copy of our universe, so
+      // we don't overwrite cell values and mess up neighbor counts.
+      setCell(x, y, next(current, neighborCount), MEMORY_SIZE);
     }
   }
+
+  // Copy the secondary copy we just wrote to back to the primary memory location we'll read from.
+  copyToPrimary();
 }
 
 function countNeighbors(x: i32, y: i32): u8 {
@@ -49,4 +59,9 @@ function countNeighbors(x: i32, y: i32): u8 {
     + getCell(x + 1, y - 1)
     + getCell(x + 1, y)
     + getCell(x + 1, y + 1);
+}
+
+@inline
+function copyToPrimary(): void {
+  memory.copy(0, MEMORY_SIZE, MEMORY_SIZE);
 }
