@@ -16,13 +16,13 @@ test("indexFromCoordinate", () => {
 
 test("get / set", () => {
   expect(getCell(2, 2)).toEqual(0);
-  setCell(2, 2, 1);
+  setCell(2, 2, 1, 0);
   expect(getCell(2, 2)).toEqual(1);
 });
 
 test("read memory directly", () => {
   const mem = new Uint8Array(memory.buffer);
-  setCell(2, 2, 10);
+  setCell(2, 2, 10, 0);
   expect(mem[2 + 2 * 250]).toEqual(10);
   expect(mem[3 + 2 * 250]).toEqual(0);
 });
