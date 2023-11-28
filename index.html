@@ -11,6 +11,8 @@
     <div>
       <button id="toggle">Play</button>
       <button id="step">Step</button>
+      <button id="randomize">Randomize</button>
+      <a href="https://github.com/ahuth/conway5">Source code</a>
     </div>
     <canvas
       id="canvas"
@@ -28,10 +30,12 @@
         UNIVERSE_SIZE,
       } from "./build/release.js";
 
-      const wasmByteMemoryArray = new Uint8Array(memory.buffer);
       const canvas = document.querySelector("#canvas");
-      const toggle = document.querySelector("#toggle");
-      const step = document.querySelector("#step");
+      const toggleButton = document.querySelector("#toggle");
+      const stepButton = document.querySelector("#step");
+      const randomizeButton = document.querySelector("#randomize");
+
+      const wasmByteMemoryArray = new Uint8Array(memory.buffer);
       const context = canvas.getContext("2d");
       const size = UNIVERSE_SIZE.value;
       const cellHeight = canvas.height / size;
@@ -42,19 +46,24 @@
       randomize();
       draw();
 
-      toggle.addEventListener('click', () => {
+      toggleButton.addEventListener('click', () => {
         if (playing) {
           playing = false;
-          toggle.textContent = 'Start';
+          toggleButton.textContent = 'Start';
         } else {
           playing = true;
-          toggle.textContent = 'Stop';
+          toggleButton.textContent = 'Stop';
           window.requestAnimationFrame(compute);
         }
       });
 
-      step.addEventListener('click', () => {
+      stepButton.addEventListener('click', () => {
         evolveCells();
+        draw();
+      });
+
+      randomizeButton.addEventListener('click', () => {
+        randomize();
         draw();
       });
 
